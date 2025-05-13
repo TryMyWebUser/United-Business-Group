@@ -9,6 +9,12 @@ class Operations
         $result = $conn->query($sql);
         return iterator_to_array($result);
     }
+    public static function getCategoryChecker($conn)
+    {;
+        $sql = "SELECT * FROM `category` ORDER BY `created_at` ASC";
+        $result = $conn->query($sql);
+        return iterator_to_array($result);
+    }
 
     public static function getProducts()
     {

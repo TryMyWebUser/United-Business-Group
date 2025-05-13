@@ -407,8 +407,8 @@ code {
   cursor: pointer;
 }
 .go-top .progress-value {
-  height: calc(100% - 6px);
-  width: calc(100% - 6px);
+  /* height: calc(100% - 6px);
+  width: calc(100% - 6px); */
   background-color: rgba(var(--white), 1);
   border-radius: 50%;
   display: grid;

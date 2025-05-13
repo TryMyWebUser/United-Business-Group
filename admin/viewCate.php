@@ -42,7 +42,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="d-flex border-bottom title-part-padding px-0 mb-3 align-items-center">
-                                    <h4 class="mb-0 fs-5">Catefory Name Card</h4>
+                                    <h4 class="mb-0 fs-5">Category Name Card</h4>
                                 </div>
                             </div>
 

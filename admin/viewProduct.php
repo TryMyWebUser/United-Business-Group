@@ -21,24 +21,26 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        
+        <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+        <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
         <?php include "temp/head.php" ?>
 
     </head>
 
-    <body class="skin-light">
-        <div id="wrapper">
-            <!-- Sidenav Menu Start -->
+    <body>
+        <div class="app-wrapper">
+            <!-- Menu Navigation starts -->
             <?php include "temp/sideheader.php" ?>
-            <!-- Sidenav Menu End -->
+            <!-- Menu Navigation ends -->
 
-            <div id="page-wrapper" class="gray-bg dashbard-1">
-                <!-- Topbar -->
+            <div class="app-content">
+                <!-- Header Section starts -->
                 <?php include "temp/header.php" ?>
+                <!-- Header Section ends -->
 
-                <div class="body-wrapper">
+                <div class="body-wrapper mt-5">
                     <div class="container-fluid">
                         <div class="row" data-masonry='{"percentPosition": true }'>
                             <?php
@@ -51,9 +53,10 @@
                                     <img class="card-img-top img-responsive" src="<?= $pro['img']; ?>" alt="Card image" />
                                     <div class="card-body">
                                         <h3 class="card-title"><?= $pro['title']; ?></h3>
-                                        <p class="card-text"><?= $pro['dec']; ?></p>
-                                        <?php if (!empty($pro['points'])) { ?>
-                                        <h5 class="card-text">points: <?= $pro['points']; ?></h5>
+                                        <p class="card-text">Category: <?= $pro['category']; ?></p>
+                                        <p class="card-text">Product Category: <?= $pro['product-cate']; ?></p>
+                                        <?php if (!empty($pro['price'])) { ?>
+                                        <h5 class="card-text">price: ₹<?= $pro['price']; ?></h5>
                                         <?php } ?>
                                         <a href="editProduct.php?edit_id=<?= $pro['id']; ?>">
                                             <button type="button" class="btn btn-square btn-outline-info me-1 p-1">

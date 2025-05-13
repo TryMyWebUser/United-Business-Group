@@ -17,14 +17,21 @@
     if ($_SERVER['REQUEST_METHOD'] === 'POST')
     {
         // Check if both username and password keys exist in $_POST
-        if (isset($_POST['submit']) && isset($_POST['point']) && isset($_POST['title']) && isset($_POST['dec']) && isset($_FILES['img']))
+        if (isset($_POST['submit']) && isset($_POST['pro_cate']) && isset($_POST['cate']) && isset($_POST['title']) && isset($_FILES['img']))
         {
-            $point = $_POST['point'] ?? "";
+            $img = $_FILES['img'] ?? "";
             $title = $_POST['title'] ?? "";
             $dec = $_POST['dec'] ?? "";
-            $img = $_FILES['img'] ?? "";
+            $price = $_POST['price'] ?? "";
+            $pro_cate = $_POST['pro_cate'] ?? "";
+            $brand = $_POST['brand'] ?? "";
+            $gst = $_POST['gst'] ?? "";
+            $pkt = $_POST['pkt'] ?? "";
+            $cate = $_POST['cate'] ?? "";
 
-            $error = User::setProducts($title, $dec, $img, $point);
+            $error = User::setProducts($img, $title, $dec, $price, $pro_cate, $brand, $gst, $pkt, $cate);
+        } else {
+            $error = "Invalid form submission";
         }
     }
 
@@ -33,22 +40,24 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        
+        <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+        <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
         <?php include "temp/head.php" ?>
 
     </head>
 
-    <body class="skin-light">
-        <div id="wrapper">
-            <!-- Sidenav Menu Start -->
+    <body>
+        <div class="app-wrapper">
+            <!-- Menu Navigation starts -->
             <?php include "temp/sideheader.php" ?>
-            <!-- Sidenav Menu End -->
+            <!-- Menu Navigation ends -->
 
-            <div id="page-wrapper" class="gray-bg dashbard-1">
-                <!-- Topbar -->
+            <div class="app-content">
+                <!-- Header Section starts -->
                 <?php include "temp/header.php" ?>
+                <!-- Header Section ends -->
 
                 <div class="body-wrapper">
                     <div class="container-fluid">
@@ -67,34 +76,86 @@
                                 <!-- start Default Basic Forms -->
                                 <div class="card">
                                     <div class="card-body">
-                                        <form class="form" method="POST" enctype="multipart/form-data">
+                                        <form class="form needs-validation" method="POST" enctype="multipart/form-data" novalidate>
                                             <div class="mb-3">
-                                                <label class="form-label">Title</label>
-                                                <input type="text" class="form-control" placeholder="Enter Title" name="title" required>
+                                                <label class="form-label">Title *</label>
+                                                <input type="text" class="form-control" name="title" placeholder="Enter Title" required>
+                                                <div class="invalid-feedback">Please enter a title.</div>
                                             </div>
+
                                             <div class="mb-3">
                                                 <label class="form-label">Description</label>
-                                                <textarea class="form-control" rows="4" name="dec" placeholder="Description" required></textarea>
+                                                <textarea class="form-control" name="dec" rows="4" placeholder="Enter Description"></textarea>
                                             </div>
+
                                             <div class="mb-3">
-                                                <label class="form-label">Points (Optional) - Use (,,)</label>
-                                                <textarea class="form-control" rows="3" name="point" placeholder="Points"></textarea>
+                                                <label class="form-label">Price</label>
+                                                <input type="text" class="form-control" name="price" placeholder="Enter Price">
                                             </div>
+
                                             <div class="mb-3">
-                                                <label class="form-label">Image Upload</label>
-                                                <input type="file" name="img" class="form-control" accept="image/*" required>
+                                                <label class="form-label">Product Category *</label>
+                                                <input type="text" class="form-control" name="pro_cate" placeholder="Enter Product Category" required>
+                                                <div class="invalid-feedback">Please enter the product category.</div>
                                             </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label">Brand</label>
+                                                <input type="text" class="form-control" name="brand" placeholder="Enter Brand">
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label">GST (%)</label>
+                                                <input type="text" class="form-control" name="gst" placeholder="Enter GST Percentage">
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label">COUNTS / PKT</label>
+                                                <input type="text" class="form-control" name="pkt" placeholder="Enter Packet Size or Count">
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label">Category *</label>
+                                                <select class="form-control" name="cate" required>
+                                                    <option value="" selected disabled>Select Category</option>
+                                                    <?php $cate = Operations::getCategory(); foreach ($cate as $c) { ?>
+                                                    <option value="<?= $c['category'] ?>"><?= $c['category'] ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                                <div class="invalid-feedback">Please select a category.</div>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label">Image Upload *</label>
+                                                <input type="file" class="form-control" name="img" accept="image/*" required>
+                                                <div class="invalid-feedback">Please upload an image.</div>
+                                            </div>
+
                                             <div class="col-12">
                                                 <div class="d-md-flex align-items-center">
                                                     <div class="ms-auto mt-3 mt-md-0">
-                                                        <button type="submit" name="submit" class="btn btn-primary hstack gap-6">
-                                                            <i class="ti ti-send fs-4"></i>
-                                                            Submit
-                                                        </button>
+                                                        <button type="submit" name="submit" class="btn btn-primary hstack gap-6">Submit</button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </form>
+
+                                        <!-- Bootstrap Validation Script -->
+                                        <script>
+                                            (() => {
+                                                'use strict';
+                                                const forms = document.querySelectorAll('.needs-validation');
+                                                Array.from(forms).forEach(form => {
+                                                    form.addEventListener('submit', event => {
+                                                        if (!form.checkValidity()) {
+                                                            event.preventDefault();
+                                                            event.stopPropagation();
+                                                        }
+                                                        form.classList.add('was-validated');
+                                                    }, false);
+                                                });
+                                            })();
+                                        </script>
                                     </div>
                                 </div>
                                 <!-- end Default Basic Forms -->
