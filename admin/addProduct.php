@@ -93,7 +93,7 @@
 
                                             <div class="mb-3">
                                                 <label class="form-label">GST (%)</label>
-                                                <input type="number" class="form-control" name="gst" placeholder="Enter GST Percentage">
+                                                <input type="number" class="form-control" name="gst" placeholder="Enter GST Percentage" value="12">
                                             </div>
 
                                             <div class="mb-3">

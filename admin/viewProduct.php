@@ -14,11 +14,6 @@
     $category = Operations::getCategoryChecker($conn);
 ?>
 
-<?php
-    if (!empty($products)) {}
-        foreach ($products as $pro) {}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -99,7 +94,7 @@
                             text-align: justify;
                         }
 
-                        .card-content button#whatsapp-order {
+                        .card-content button.whatsapp-order {
                             cursor: pointer;
                             color: #fff;
                             width: 100%;
@@ -140,30 +135,31 @@
                             if (!empty($category)) {
                                 foreach ($category as $cate) {
                             ?>
-                            <a class="filter_link text-dark me-2" href="#" data-filter="<?= strtolower(str_replace([' ', '-', '_'], '', $cate['category'])); ?>">
+                            <a class="filter_link text-dark me-2" href="#" data-filter="<?= strtolower(str_replace([' ', '-', '_', '&'], '', $cate['category'])); ?>">
                                 <button type="button" class="btn btn-outline-info mb-2">
                                     <?= $cate['category'] ?>
                                 </button>
                             </a>
                             <?php } } ?>
                         </div>
-                        <div class="row d-flex justify-content-center g-4" data-masonry='{"percentPosition": true }'>
+                        <div class="row d-flex justify-content-center g-4">
                             <?php
                                 if (!empty($products)) {
                                     foreach ($products as $item) {
                             ?>
-                            <div class="col-12 col-sm-6 col-md-4 col-lg-3 pro-card <?= $item['category']; ?> <?= strtolower(str_replace([' ', '-', '_'], '', $item['product-cate'])); ?>">
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-3 pro-card <?= $item['category']; ?> <?= strtolower(str_replace([' ', '-', '_', '&'], '', $item['product-cate'])); ?>">
                                 <div class="card">
                                     <div class="card-image p-0">
+                                        <button class="<?= $item['category'] == 'veg' ? 'btn-success' : 'btn-danger' ?> text-capitalize rounded position-absolute mt-2 ms-2 pt-1"><?= $item['category'] ?></button>
                                         <img src="<?= $item['img']; ?>" alt="Image Not Found">
                                     </div>
                                     <div class="card-content">
                                         <h3 class="product-title"><?= $item['title']; ?></h3>
-                                        
-                                        <p class="card-text"><?php if (!empty($pro['sub-price'])) { ?><del>₹<?= $pro['sub-price']; ?></del><?php } ?> / <?php if (!empty($pro['price'])) { ?>₹<?= $pro['price']; ?><?php } ?></p>
-                                       
-                                        <button class="mb-3" id="whatsapp-order" 
-                                            data-title="<?= $item['title']; ?>" 
+                                        <p class="card-text"><?php if (!empty($item['sub-price'])) { ?><del>₹<?= $item['sub-price']; ?></del> / <?php } if (!empty($item['price'])) { ?>₹<?= $item['price']; ?><?php } ?></p>
+                                        <button class="mb-3 whatsapp-order"
+                                            data-id="<?= $item['id']; ?>" 
+                                            data-title="<?= $item['title']; ?>"
+                                            data-cate="<?= $item['category'] ?>"
                                             data-price="<?= $item['price']; ?>"
                                             data-gst="<?= $item['gst']; ?>" 
                                             data-image="<?= $item['img']; ?>">
@@ -194,35 +190,38 @@
         </div>
 
         <?php include "temp/footer.php"; ?>
-        <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
-        
+ 
         <script>
             document.addEventListener("DOMContentLoaded", () => {
-                const orderBtn = document.getElementById("whatsapp-order");
+                const orderButtons = document.querySelectorAll(".whatsapp-order");
 
-                orderBtn.addEventListener("click", () => {
-                    const title = orderBtn.getAttribute("data-title");
-                    const price = parseFloat(orderBtn.getAttribute("data-price"));
-                    const gst = parseFloat(orderBtn.getAttribute("data-gst"));
+                orderButtons.forEach(button => {
+                    button.addEventListener("click", () => {
+                        const title = button.getAttribute("data-title");
+                        const cate = button.getAttribute("data-cate");
+                        const price = parseFloat(button.getAttribute("data-price"));
+                        const gst = parseFloat(button.getAttribute("data-gst"));
 
-                    const gstAmount = (price * gst) / 100;
-                    const grandTotal = price + gstAmount;
-                    const formattedTotal = grandTotal.toFixed(2); // Ensures 2 decimal places
-                    const remarks = "-";
+                        const gstAmount = (price * gst) / 100;
+                        const grandTotal = price + gstAmount;
+                        const formattedTotal = grandTotal.toFixed(2);
+                        const remarks = "-";
 
-                    const message = 
-                        `Hello United Business Group, I would like to order:  
-                        1) Product Name: *${title}*    
-                        Price per qty: Rs.${price}  
-                        GST: ${gst}%  
-                        Grand Total: Rs.${formattedTotal}  
-                        Remarks: ${remarks}`;
+                        const message = 
+                            `Hello United Business Group, I would like to order:  
+                            1) Product Name: *${title}*  
+                            2) Category: *${cate}*
+                            Price per qty: Rs.${price}  
+                            GST: ${gst}%  
+                            Grand Total: Rs.${formattedTotal}  
+                            Remarks: ${remarks}`;
 
-                    const encodedMessage = encodeURIComponent(message);
-                    const whatsappNumber = "919750996666"; // Replace with your number
-                    const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+                        const encodedMessage = encodeURIComponent(message);
+                        const whatsappNumber = "919750996666"; // Your WhatsApp number
+                        const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
 
-                    window.open(whatsappURL, "_blank");
+                        window.open(whatsappURL, "_blank");
+                    });
                 });
             });
         </script>
