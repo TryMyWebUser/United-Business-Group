@@ -17,19 +17,17 @@
     if ($_SERVER['REQUEST_METHOD'] === 'POST')
     {
         // Check if both username and password keys exist in $_POST
-        if (isset($_POST['submit']) && isset($_POST['pro_cate']) && isset($_POST['cate']) && isset($_POST['title']) && isset($_FILES['img']))
+        if (isset($_POST['submit']) && isset($_POST['cate']) && isset($_POST['title']) && isset($_FILES['img']))
         {
             $img = $_FILES['img'] ?? "";
             $title = $_POST['title'] ?? "";
-            $dec = $_POST['dec'] ?? "";
             $price = $_POST['price'] ?? "";
-            $pro_cate = $_POST['pro_cate'] ?? "";
-            $brand = $_POST['brand'] ?? "";
+            $sub = $_POST['sub'] ?? "";
             $gst = $_POST['gst'] ?? "";
-            $pkt = $_POST['pkt'] ?? "";
+            $pro_cate = $_POST['pro_cate'] ?? "";
             $cate = $_POST['cate'] ?? "";
 
-            $error = User::setProducts($img, $title, $dec, $price, $pro_cate, $brand, $gst, $pkt, $cate);
+            $error = User::setProducts($img, $title, $price, $sub, $gst, $pro_cate, $cate);
         } else {
             $error = "Invalid form submission";
         }
@@ -84,46 +82,45 @@
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label">Description</label>
-                                                <textarea class="form-control" name="dec" rows="4" placeholder="Enter Description"></textarea>
-                                            </div>
-
-                                            <div class="mb-3">
                                                 <label class="form-label">Price</label>
-                                                <input type="text" class="form-control" name="price" placeholder="Enter Price">
+                                                <input type="number" class="form-control" name="price" placeholder="Enter Price">
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label">Product Category *</label>
-                                                <input type="text" class="form-control" name="pro_cate" placeholder="Enter Product Category" required>
-                                                <div class="invalid-feedback">Please enter the product category.</div>
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label">Brand</label>
-                                                <input type="text" class="form-control" name="brand" placeholder="Enter Brand">
+                                                <label class="form-label">Sub Price</label>
+                                                <input type="number" class="form-control" name="sub" placeholder="Enter Sub Price">
                                             </div>
 
                                             <div class="mb-3">
                                                 <label class="form-label">GST (%)</label>
-                                                <input type="text" class="form-control" name="gst" placeholder="Enter GST Percentage">
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label">COUNTS / PKT</label>
-                                                <input type="text" class="form-control" name="pkt" placeholder="Enter Packet Size or Count">
+                                                <input type="number" class="form-control" name="gst" placeholder="Enter GST Percentage">
                                             </div>
 
                                             <div class="mb-3">
                                                 <label class="form-label">Category *</label>
                                                 <select class="form-control" name="cate" required>
-                                                    <option value="" selected disabled>Select Category</option>
-                                                    <?php $cate = Operations::getCategory(); foreach ($cate as $c) { ?>
-                                                    <option value="<?= $c['category'] ?>"><?= $c['category'] ?></option>
-                                                    <?php } ?>
+                                                    <option value="" disabled selected>Select Category</option>
+                                                    <option value="veg">
+                                                        Veg Products
+                                                    </option>
+                                                    <option value="non-veg">
+                                                        Non-Veg Products
+                                                    </option>
                                                 </select>
                                                 <div class="invalid-feedback">Please select a category.</div>
                                             </div>
+
+                                            <?php $cate = Operations::getCategory(); if (!empty($cate)) { ?>
+                                            <div class="mb-3">
+                                                <label class="form-label">Product Category</label>
+                                                <select class="form-control" name="pro_cate">
+                                                    <option selected disabled>Select Product Category</option>
+                                                    <?php foreach ($cate as $c) { ?>
+                                                    <option value="<?= $c['category'] ?>"><?= $c['category'] ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                            <?php } ?>
 
                                             <div class="mb-3">
                                                 <label class="form-label">Image Upload *</label>

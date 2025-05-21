@@ -40,7 +40,7 @@ class User
         }
     }
 
-    public static function setProducts($img, $title, $dec, $price, $pro_cate, $brand, $gst, $pkt, $cate)
+    public static function setProducts($img, $title, $price, $sub, $gst, $pro_cate, $cate)
     {
         $conn = Database::getConnect();
         $targetDir = "../uploads/"; // Define your upload directory
@@ -69,8 +69,8 @@ class User
         }
 
         // Insert data into database
-        $sql = "INSERT INTO `products`(`img`, `title`, `dec`, `price`, `product-cate`, `brand`, `gst`, `counts-pkt`, `category`, `created_at`)
-                VALUES ('$filePath', '$title', '$dec', '$price', '$pro_cate', '$brand', '$gst', '$pkt', '$cate', NOW())";
+        $sql = "INSERT INTO `products`(`img`, `title`, `price`, `sub-price`, `gst`, `product-cate`, `category`, `created_at`)
+                VALUES ('$filePath', '$title', '$price', '$sub', '$gst', '$pro_cate', '$cate', NOW())";
 
         if ($conn->query($sql)) {
             header("Location: viewProduct.php");
@@ -79,7 +79,7 @@ class User
             return "Error occurred while saving data: " . $conn->error;
         }
     }
-    public static function updateProducts($img, $title, $dec, $price, $pro_cate, $brand, $gst, $pkt, $cate, $conn, $getID)
+    public static function updateProducts($img, $title, $price, $sub, $gst, $pro_cate, $cate, $conn, $getID)
     {
         $targetDir = "../uploads/"; // Define your upload directory
         
@@ -119,14 +119,14 @@ class User
             }
 
             // Update database with new image path
-            $sql = "UPDATE `products` SET `img` = ?, `title` = ?, `dec` = ?, `price` = ?, `product-cate` = ?, `brand` = ?, `gst` = ?, `counts-pkt` = ?, `category` = ?, `created_at` = NOW() WHERE `id` = ?";
+            $sql = "UPDATE `products` SET `img` = ?, `title` = ?, `price` = ?, `sub-price` = ?, `gst` = ?, `product-cate` = ?, `category` = ?, `created_at` = NOW() WHERE `id` = ?";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("sssssssssi", $filePath, $title, $dec, $price, $pro_cate, $brand, $gst, $pkt, $cate, $getID);
+            $stmt->bind_param("sssssssi", $filePath, $title, $price, $sub, $gst, $pro_cate, $cate, $getID);
         } else {
             // Update database without changing the image
-            $sql = "UPDATE `products` SET `title` = ?, `dec` = ?, `price` = ?, `product-cate` = ?, `brand` = ?, `gst` = ?, `counts-pkt` = ?, `category` = ?, `created_at` = NOW() WHERE `id` = ?";
+            $sql = "UPDATE `products` SET `title` = ?, `price` = ?, `sub-price` = ?, `gst` = ?, `product-cate` = ?, `category` = ?, `created_at` = NOW() WHERE `id` = ?";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ssssssssi", $title, $dec, $price, $pro_cate, $brand, $gst, $pkt, $cate, $getID);
+            $stmt->bind_param("ssssssi", $title, $price, $sub, $gst, $pro_cate, $cate, $getID);
         }
 
         // Execute the statement

@@ -20,20 +20,18 @@
     if ($_SERVER['REQUEST_METHOD'] === 'POST')
     {
         // Check if both username and password keys exist in $_POST
-        if (isset($_POST['submit']) && isset($_POST['pro_cate']) && isset($_POST['cate']) && isset($_POST['title']))
+        if (isset($_POST['submit']) && isset($_POST['cate']) && isset($_POST['title']))
         {
             $getID = $_GET['edit_id'];
             $img = $_FILES['img'] ?? "";
             $title = $_POST['title'] ?? "";
-            $dec = $_POST['dec'] ?? "";
             $price = $_POST['price'] ?? "";
-            $pro_cate = $_POST['pro_cate'] ?? "";
-            $brand = $_POST['brand'] ?? "";
+            $sub = $_POST['sub'] ?? "";
             $gst = $_POST['gst'] ?? "";
-            $pkt = $_POST['pkt'] ?? "";
+            $pro_cate = $_POST['pro_cate'] ?? "";
             $cate = $_POST['cate'] ?? "";
 
-            $error = User::updateProducts($img, $title, $dec, $price, $pro_cate, $brand, $gst, $pkt, $cate, $conn, $getID);
+            $error = User::updateProducts($img, $title, $price, $sub, $gst, $pro_cate, $cate, $conn, $getID);
         }
     }
 ?>
@@ -81,57 +79,54 @@
                                                 <div class="invalid-feedback">Please enter a title.</div>
                                             </div>
 
-                                            <!-- Description -->
-                                            <div class="mb-3">
-                                                <label class="form-label">Description</label>
-                                                <textarea class="form-control" name="dec" rows="4" placeholder="Enter Description"><?= htmlspecialchars($pro['dec']) ?></textarea>
-                                            </div>
-
                                             <!-- Price -->
                                             <div class="mb-3">
                                                 <label class="form-label">Price</label>
-                                                <input type="text" class="form-control" name="price" placeholder="Enter Price" value="<?= htmlspecialchars($pro['price']) ?>">
+                                                <input type="number" class="form-control" name="price" placeholder="Enter Price" value="<?= htmlspecialchars($pro['price']) ?>">
                                             </div>
 
                                             <!-- Product Category -->
                                             <div class="mb-3">
-                                                <label class="form-label">Product Category *</label>
-                                                <input type="text" class="form-control" name="pro_cate" placeholder="Enter Product Category" value="<?= htmlspecialchars($pro['product-cate']) ?>" required>
-                                                <div class="invalid-feedback">Please enter the product category.</div>
-                                            </div>
-
-                                            <!-- Brand -->
-                                            <div class="mb-3">
-                                                <label class="form-label">Brand</label>
-                                                <input type="text" class="form-control" name="brand" placeholder="Enter Brand" value="<?= htmlspecialchars($pro['brand']) ?>">
+                                                <label class="form-label">Sub Price</label>
+                                                <input type="number" class="form-control" name="sub" placeholder="Enter Sub Price" value="<?= htmlspecialchars($pro['sub-price']) ?>">
                                             </div>
 
                                             <!-- GST -->
                                             <div class="mb-3">
                                                 <label class="form-label">GST (%)</label>
-                                                <input type="text" class="form-control" name="gst" placeholder="Enter GST Percentage" value="<?= htmlspecialchars($pro['gst']) ?>">
+                                                <input type="number" class="form-control" name="gst" placeholder="Enter GST Percentage" value="<?= htmlspecialchars($pro['gst']) ?>">
                                             </div>
 
-                                            <!-- Packet / Counts -->
-                                            <div class="mb-3">
-                                                <label class="form-label">COUNTS / PKT</label>
-                                                <input type="text" class="form-control" name="pkt" placeholder="Enter Packet Size or Count" value="<?= htmlspecialchars($pro['counts-pkt']) ?>">
-                                            </div>
-
-                                            <!-- Category Dropdown -->
+                                            <!-- Product Category -->
                                             <div class="mb-3">
                                                 <label class="form-label">Category *</label>
                                                 <select class="form-control" name="cate" required>
-                                                    <option value="" disabled>Select Category</option>
-                                                    <?php $cateList = Operations::getCategoryChecker($conn);
-                                                    foreach ($cateList as $c) { ?>
-                                                        <option value="<?= $c['category'] ?>" <?= $c['category'] === $pro['product-cate'] ? 'selected' : '' ?>>
-                                                            <?= $c['category'] ?>
-                                                        </option>
-                                                    <?php } ?>
+                                                    <option value="<?= htmlspecialchars($pro['category']) ?>">Select Category</option>
+                                                    <option value="veg">
+                                                        Veg Products
+                                                    </option>
+                                                    <option value="non-veg">
+                                                        Non-Veg Products
+                                                    </option>
                                                 </select>
                                                 <div class="invalid-feedback">Please select a category.</div>
                                             </div>
+
+                                            <!-- Category Dropdown -->
+                                            <?php $cateList = Operations::getCategoryChecker($conn); if (!empty($cateList)) { ?>
+                                            <div class="mb-3">
+                                                <label class="form-label">Product Category</label>
+                                                <select class="form-control" name="pro_cate">
+                                                    <option value="<?= htmlspecialchars($pro['product-cate']) ?>">Select Product Category</option>
+                                                    <?php
+                                                        foreach ($cateList as $c) { ?>
+                                                            <option value="<?= $c['category'] ?>" selected>
+                                                                <?= $c['category'] ?>
+                                                            </option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
+                                            <?php } ?>
 
                                             <!-- Image Upload -->
                                             <div class="mb-3">
